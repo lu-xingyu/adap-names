@@ -35,11 +35,8 @@ export class Name {
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
         // the first \ is eacape character, /\\/ means 1 \, '\\\\' means 2 \
-        const escapedChar = ESCAPE_CHARACTER.replace(/\\/g, '\\\\'); 
-        const readableComponents = this.components.map(element => 
-            element.replace(new RegExp(escapedChar, 'g'),"")
-        )
-        return readableComponents.join(delimiter)
+        return this.components.join(delimiter)
+
     }
 
     /** 
@@ -49,7 +46,21 @@ export class Name {
      */
     // @methodtype conversion-method
     public asDataString(): string {
-        return this.components.join(DEFAULT_DELIMITER)
+        const newComponents = [];
+        for (let i = 0; i < this.components.length; i++) {
+            let newC = this.components[i]
+            for (let j = 0; j < newC.length; j++) {
+                if (newC[j] === ESCAPE_CHARACTER ) {
+                    newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
+                    j++;
+                } else if (newC[j] === DEFAULT_DELIMITER) {
+                    newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
+                    j++;
+                }
+            }
+            newComponents.push(newC);
+        }
+        return newComponents.join(DEFAULT_DELIMITER);
     }
 
     /** Returns properly masked component string */
