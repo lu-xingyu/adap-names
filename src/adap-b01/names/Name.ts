@@ -34,15 +34,11 @@ export class Name {
      */
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        if (delimiter === this.delimiter) {
-            return this.components.join(delimiter);
-        }
-
         const newComponents =[];
         for (let comp of this.components) {
             let newC = ''
             for (let j = 0; j < comp.length; j++) {
-                if(comp[j] === ESCAPE_CHARACTER && comp[j+1] === this.delimiter) {
+                if(comp[j] === ESCAPE_CHARACTER) {
                     newC = newC + comp[j+1]
                     j++
                 } else {
@@ -65,12 +61,9 @@ export class Name {
         for (let i = 0; i < this.components.length; i++) {
             let newC = this.components[i]
             for (let j = 0; j < newC.length; j++) {
-                if (newC[j] === ESCAPE_CHARACTER ) {
-                    newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
-                    j++;
-                } else if (newC[j] === DEFAULT_DELIMITER) {
-                    newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
-                    j++;
+            if (newC[j] === DEFAULT_DELIMITER) {
+                newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
+                j++;
                 }
             }
             newComponents.push(newC);
