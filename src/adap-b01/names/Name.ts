@@ -34,9 +34,24 @@ export class Name {
      */
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        // the first \ is eacape character, /\\/ means 1 \, '\\\\' means 2 \
-        return this.components.join(delimiter)
+        if (delimiter === this.delimiter) {
+            return this.components.join(delimiter);
+        }
 
+        const newComponents =[];
+        for (let comp of this.components) {
+            let newC = ''
+            for (let j = 0; j < comp.length; j++) {
+                if(comp[j] === ESCAPE_CHARACTER && comp[j+1] === this.delimiter) {
+                    newC = newC + comp[j+1]
+                    j++
+                } else {
+                    newC = newC + comp[j]
+                } 
+            }
+            newComponents.push(newC);
+        }        
+        return newComponents.join(delimiter);
     }
 
     /** 
