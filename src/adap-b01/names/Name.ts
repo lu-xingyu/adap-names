@@ -32,6 +32,12 @@ export class Name {
      * Special characters are not escaped (creating a human-readable string)
      * Users can vary the delimiter character to be used
      */
+
+    /* asString: remove all the masking; 
+       if char_j = ESCAPE, skip char_j, concat char_j+1, and continue with char_j+2 
+       if cahr_j != ESCAPE, concat char_j, and continue with char_j+1
+    */
+
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
         const newComponents =[];
@@ -55,20 +61,31 @@ export class Name {
      * Machine-readable means that from a data string, a Name can be parsed back in
      * The special characters in the data string are the default characters
      */
+
+    /* asDataString: if this.delimiter == default.delimiter, join all comp with default delimiter
+       if this.delimiter != default.delimiter, remove the mask before original delimiter, and add mask to default delimiter
+    */
+
     // @methodtype conversion-method
     public asDataString(): string {
-        const newComponents = [];
-        for (let i = 0; i < this.components.length; i++) {
-            let newC = this.components[i]
-            for (let j = 0; j < newC.length; j++) {
-            if (newC[j] === DEFAULT_DELIMITER) {
-                newC = newC.slice(0, j) + ESCAPE_CHARACTER + newC.slice(j);
-                j++;
+        if (this.delimiter !== DEFAULT_DELIMITER) {
+            const newComponents = [];
+            for (let comp of this.components) {
+                let newC = ''
+                for (let j = 0; j < comp.length; j++) {
+                    if (comp[j] === DEFAULT_DELIMITER) {
+                        newC = newC + ESCAPE_CHARACTER + comp[j];
+                    } else if (comp[j] === this.delimiter && comp[j-1] === ESCAPE_CHARACTER) {
+                        newC = newC.slice(0, newC.length - 1) + comp[j]
+                    } else {
+                        newC = newC + comp[j]
+                    }
                 }
+                newComponents.push(newC);
             }
-            newComponents.push(newC);
+            return newComponents.join(DEFAULT_DELIMITER);
         }
-        return newComponents.join(DEFAULT_DELIMITER);
+        return this.components.join(DEFAULT_DELIMITER);
     }
 
     /** Returns properly masked component string */

@@ -7,51 +7,100 @@ export class StringArrayName implements Name {
     protected components: string[] = [];
 
     constructor(source: string[], delimiter?: string) {
-        throw new Error("needs implementation or deletion");
+        this.components = source;
+        if(delimiter != undefined) {
+            this.delimiter = delimiter
+        }
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
+        const newComponents =[];
+        for (let comp of this.components) {
+            let newC = ''
+            for (let j = 0; j < comp.length; j++) {
+                if(comp[j] === ESCAPE_CHARACTER) {
+                    newC = newC + comp[j+1]
+                    j++
+                } else {
+                    newC = newC + comp[j]
+                } 
+            }
+            newComponents.push(newC);
+        }        
+        return newComponents.join(delimiter);
     }
 
     public asDataString(): string {
-        throw new Error("needs implementation or deletion");
+        if (this.delimiter !== DEFAULT_DELIMITER) {
+            const newComponents = [];
+            for (let comp of this.components) {
+                let newC = ''
+                for (let j = 0; j < comp.length; j++) {
+                    if (comp[j] === DEFAULT_DELIMITER) {
+                        newC = newC + ESCAPE_CHARACTER + comp[j];
+                    } else if (comp[j] === this.delimiter && comp[j-1] === ESCAPE_CHARACTER) {
+                        newC = newC.slice(0, newC.length - 1) + comp[j]
+                    } else {
+                        newC = newC + comp[j]
+                    }
+                }
+                newComponents.push(newC);
+            }
+            return newComponents.join(DEFAULT_DELIMITER);
+        }
+        return this.components.join(DEFAULT_DELIMITER);
     }
 
+
     public getDelimiterCharacter(): string {
-        throw new Error("needs implementation or deletion");
+        return this.delimiter;
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation or deletion");
+        if (this.getNoComponents() === 0) {
+            return true;
+        }
+        return false;
     }
 
     public getNoComponents(): number {
-        throw new Error("needs implementation or deletion");
+        return this.components.length;
     }
 
     public getComponent(i: number): string {
-        throw new Error("needs implementation or deletion");
+        if (i < this.components.length) {
+            const original = this.components[i];
+            return original
+        }
+        throw new Error(`Component index ${i} out of range`);
     }
 
     public setComponent(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        if (i < this.components.length) {
+            this.components[i] = c; 
+        }
+        throw new Error(`Component index ${i} out of range`);
     }
 
     public insert(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.components.splice(i, 0, c);
     }
 
     public append(c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.components.push(c);
     }
 
     public remove(i: number): void {
-        throw new Error("needs implementation or deletion");
+        this.components.splice(i, 1);
     }
 
+    // assume the delimiter is the same
     public concat(other: Name): void {
-        throw new Error("needs implementation or deletion");
+        if (other.getDelimiterCharacter() === this.delimiter) {
+            for (let i = 0; i < other.getNoComponents(); i++) {
+                const comp = other.getComponent(i)
+                this.append(comp)
+            }
+        }
     }
-
 }
