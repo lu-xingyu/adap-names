@@ -91,6 +91,9 @@ export class StringName implements Name {
     }
 
     public getComponent(x: number): string {
+        if (x < 0 || x >= this.getNoComponents()) {
+            throw new Error(`Component index ${x} out of range`);
+        }
         const Comps = this.getComponents()
         return Comps[x]
     }
@@ -100,6 +103,9 @@ export class StringName implements Name {
     }
 
     public setComponent(n: number, c: string): void {
+        if (n < 0 || n >= this.getNoComponents()) {
+            throw new Error(`Component index ${n} out of range`);
+        }
         let Comps = this.getComponents()
         Comps[n] = c
         this.setName(Comps.join(this.delimiter))
@@ -118,6 +124,9 @@ export class StringName implements Name {
     }
 
     public remove(n: number): void {
+        if (n < 0 || n >= this.getNoComponents()) {
+            throw new Error(`Component index ${n} out of range`);
+        }
         let Comps = this.getComponents()
         Comps.splice(n, 1)
         this.setName(Comps.join(this.delimiter))

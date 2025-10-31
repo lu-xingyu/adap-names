@@ -91,20 +91,20 @@ export class Name {
     /** Returns properly masked component string */
     // @methodtype get-method
     public getComponent(i: number): string {
-        if (i < this.components.length) {
-            const original = this.components[i];
-            return original
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
         }
-        throw new Error(`Component index ${i} out of range`);
+        const original = this.components[i];
+        return original  
     }
 
     /** Expects that new Name component c is properly masked */
     // @methodtype set-method
     public setComponent(i: number, c: string): void {
-        if (i < this.components.length) {
-            this.components[i] = c; 
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
         }
-        throw new Error(`Component index ${i} out of range`);       
+        this.components[i] = c;      
     }
 
      /** Returns number of components in Name instance */
@@ -127,6 +127,9 @@ export class Name {
 
     // @methodtype command-method
     public remove(i: number): void {
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
+        }
         this.components.splice(i, 1);
     }
 }

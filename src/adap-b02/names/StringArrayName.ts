@@ -68,18 +68,19 @@ export class StringArrayName implements Name {
     }
 
     public getComponent(i: number): string {
-        if (i < this.components.length) {
-            const original = this.components[i];
-            return original
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
         }
-        throw new Error(`Component index ${i} out of range`);
+        const original = this.components[i];
+        return original
+        
     }
 
     public setComponent(i: number, c: string): void {
-        if (i < this.components.length) {
-            this.components[i] = c; 
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
         }
-        throw new Error(`Component index ${i} out of range`);
+        this.components[i] = c; 
     }
 
     public insert(i: number, c: string): void {
@@ -91,6 +92,9 @@ export class StringArrayName implements Name {
     }
 
     public remove(i: number): void {
+        if (i < 0 || i >= this.components.length) {
+            throw new Error(`Component index ${i} out of range`);
+        }
         this.components.splice(i, 1);
     }
 
