@@ -81,10 +81,12 @@ export class StringName implements Name {
                 if (i - 1 < 0 || this.name[i-1] !== ESCAPE_CHARACTER) {
                     Comps.push(CurrentComp);
                     CurrentComp = '';
+                    continue;
                 }
             }
             CurrentComp = CurrentComp + this.name[i];
         }
+        Comps.push(CurrentComp)
         return Comps
     }
 
