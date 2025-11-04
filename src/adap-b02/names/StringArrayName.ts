@@ -72,8 +72,7 @@ export class StringArrayName implements Name {
             throw new Error(`Component index ${i} out of range`);
         }
         const original = this.components[i];
-        return original
-        
+        return original   
     }
 
     public setComponent(i: number, c: string): void {
