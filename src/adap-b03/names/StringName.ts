@@ -39,7 +39,7 @@ export class StringName extends AbstractName {
     }
 
     public getHashCode(): number {
-        throw new Error("needs implementation or deletion");
+        return super.getHashCode()
     }
 
     public isEmpty(): boolean {
@@ -47,7 +47,7 @@ export class StringName extends AbstractName {
     }
 
     public getDelimiterCharacter(): string {
-         return super.getDelimiterCharacter()
+        return super.getDelimiterCharacter()
     }
 
     public getNoComponents(): number {

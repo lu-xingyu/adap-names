@@ -60,21 +60,11 @@ export abstract class AbstractName implements Name {
     public isEqual(other: Name): boolean {
         return this.getDelimiterCharacter() === other.getDelimiterCharacter() &&
                this.getNoComponents() === other.getNoComponents() &&
-               this.asDataString === other.asDataString
-
-        /*
-        if (this.getDelimiterCharacter() !== other.getDelimiterCharacter()) {
-            return false
-        }
-        if (this.getNoComponents() !== other.getNoComponents()) {
-            return false
-        }
-            */
-        
+               this.asDataString() === other.asDataString()
     }
 
     public getHashCode(): number {
-        const thisString = this.getComponents().join(this.getDelimiterCharacter())
+        const thisString = this.getComponents().join(this.getDelimiterCharacter()) + this.getDelimiterCharacter()
         let hash = 0
         for (let i = 0; i < thisString.length; i++) {
             hash = hash * 31 + thisString.charCodeAt(i) | 0
@@ -109,5 +99,4 @@ export abstract class AbstractName implements Name {
             this.append(other.getComponent(i))
         }
     }
-
 }
