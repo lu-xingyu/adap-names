@@ -1,6 +1,5 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
-import { Exception } from "../common/Exception";
 import { InvalidStateException } from "../common/InvalidStateException";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
@@ -35,7 +34,6 @@ export abstract class AbstractName implements Name {
             }
             newComponents.push(newC);
         }        
-
         return newComponents.join(delimiter);
     }
 
