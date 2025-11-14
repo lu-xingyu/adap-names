@@ -1,6 +1,7 @@
 import { Name } from "../names/Name";
 import { StringName } from "../names/StringName";
 import { Directory } from "./Directory";
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 export class RootNode extends Directory {
 
@@ -23,10 +24,12 @@ export class RootNode extends Directory {
     }
 
     public move(to: Directory): void {
+        IllegalArgumentException.assert(to instanceof Directory)
         // null operation
     }
 
     protected doSetBaseName(bn: string): void {
+        IllegalArgumentException.assert(bn !== '')
         // null operation
     }
 

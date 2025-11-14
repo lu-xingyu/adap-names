@@ -1,6 +1,7 @@
 import { Node } from "./Node";
 import { Directory } from "./Directory";
 import { MethodFailedException } from "../common/MethodFailedException";
+import { InvalidStateException } from "../common/InvalidStateException";
 
 enum FileState {
     OPEN,
@@ -17,15 +18,18 @@ export class File extends Node {
     }
 
     public open(): void {
+        InvalidStateException.assert(this.state === FileState.CLOSED)
         // do something
     }
 
     public read(noBytes: number): Int8Array {
         // read something
+        InvalidStateException.assert(this.state === FileState.OPEN)
         return new Int8Array();
     }
 
     public close(): void {
+        InvalidStateException.assert(this.state !== FileState.CLOSED)
         // do something
     }
 
