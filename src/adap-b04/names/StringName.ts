@@ -1,9 +1,7 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
-import { Exception } from "../common/Exception";
 import { InvalidStateException } from "../common/InvalidStateException";
-import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 export class StringName extends AbstractName {
 
@@ -72,11 +70,7 @@ export class StringName extends AbstractName {
 
     public getComponent(i: number): string {
         this.isValid()
-        if (i < 0 || i >= this.getNoComponents()) {
-            throw new Error(`Component index ${i} out of range`);
-        }
-        const Comps = this.getComponents()
-        return Comps[i]
+        return super.getComponent(i)
     }
 
     public getComponents(): string[] {
@@ -99,9 +93,8 @@ export class StringName extends AbstractName {
 
     public setComponent(i: number, c: string) {
         this.isValid()
-        if (i < 0 || i >= this.getNoComponents()) {
-            throw new Error(`Component index ${i} out of range`);
-        }
+        this.checkIndex(i, this.getNoComponents())
+        this.checkComp(c)
         let Comps = this.getComponents()
         Comps[i] = c
         this.name = Comps.join(this.delimiter)
@@ -109,26 +102,33 @@ export class StringName extends AbstractName {
 
     public insert(i: number, c: string) {
         this.isValid()
+        this.checkIndex(i, this.getNoComponents() + 1)
+        this.checkComp(c)
         let Comps = this.getComponents()
         Comps.splice(i, 0, c)
         this.name = Comps.join(this.delimiter)
+        this.noComponents++
     }
 
     public append(c: string) {
         this.isValid()
+        this.checkComp(c)
         let Comps = this.getComponents()
         Comps.push(c)
         this.name = Comps.join(this.delimiter)
+        this.noComponents++
     }
 
     public remove(i: number) {
         this.isValid()
+        this.checkIndex(i, this.getNoComponents())
         if (i < 0 || i >= this.getNoComponents()) {
             throw new Error(`Component index ${i} out of range`);
         }
         let Comps = this.getComponents()
         Comps.splice(i, 1)
         this.name = Comps.join(this.delimiter)
+        this.noComponents--
     }
 
     public concat(other: Name): void {

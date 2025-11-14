@@ -1,9 +1,7 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
-import { Exception } from "../common/Exception";
 import { InvalidStateException } from "../common/InvalidStateException";
-import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 export class StringArrayName extends AbstractName {
 
@@ -72,11 +70,7 @@ export class StringArrayName extends AbstractName {
 
     public getComponent(i: number): string {
         this.isValid()
-        if (i < 0 || i >= this.components.length) {
-            throw new Error(`Component index ${i} out of range`);
-        }
-        const original = this.components[i];
-        return original 
+        return super.getComponent(i)
     }
 
     public getComponents() :string[] {
@@ -86,6 +80,8 @@ export class StringArrayName extends AbstractName {
 
     public setComponent(i: number, c: string) {
         this.isValid()
+        this.checkIndex(i, this.getNoComponents())
+        this.checkComp(c)
         if (i < 0 || i >= this.components.length) {
             throw new Error(`Component index ${i} out of range`);
         }
@@ -94,16 +90,20 @@ export class StringArrayName extends AbstractName {
 
     public insert(i: number, c: string) {
         this.isValid()
+        this.checkIndex(i, this.getNoComponents() + 1)
+        this.checkComp(c)
         this.components.splice(i, 0, c);
     }
 
     public append(c: string) {
         this.isValid()
+        this.checkComp(c)
         this.components.push(c);
     }
 
     public remove(i: number) {
         this.isValid()
+        this.checkIndex(i, this.getNoComponents())
         if (i < 0 || i >= this.components.length) {
             throw new Error(`Component index ${i} out of range`);
         }
@@ -112,6 +112,7 @@ export class StringArrayName extends AbstractName {
 
     public concat(other: Name): void {
         this.isValid()
+        
         super.concat(other)
     }
 }

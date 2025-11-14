@@ -95,8 +95,25 @@ export abstract class AbstractName implements Name {
     abstract remove(i: number): void;
 
     public concat(other: Name): void {
-        for (let i = 0; i < other.getNoComponents(); i++) {
-            this.append(other.getComponent(i))
+        if (other.getDelimiterCharacter() === this.getDelimiterCharacter()) {
+            for (let i = 0; i < other.getNoComponents(); i++) {
+                this.append(other.getComponent(i))
+            }    
+        } else {
+            for (let i = 0; i < other.getNoComponents(); i++) {
+                const comp = other.getComponent(i)
+                let newC = ''
+                for (let j = 0; j < comp.length; j++) {
+                    if (comp[j] === this.getDelimiterCharacter()) {
+                        newC = newC + ESCAPE_CHARACTER + comp[j];
+                    } else if (comp[j] === other.getDelimiterCharacter() && comp[j-1] === ESCAPE_CHARACTER) {
+                        newC = newC.slice(0, newC.length - 1) + comp[j]
+                    } else {
+                        newC = newC + comp[j]
+                    }
+                } 
+                this.append(newC)
+            }
         }
     }
 }

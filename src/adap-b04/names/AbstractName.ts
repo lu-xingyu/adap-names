@@ -19,6 +19,7 @@ export abstract class AbstractName implements Name {
     abstract clone(): Name;
 
     public asString(delimiter: string = this.delimiter): string {
+        IllegalArgumentException.assert(delimiter.length === 1)
         const components = this.getComponents()
 
         const newComponents =[];
@@ -90,11 +91,25 @@ export abstract class AbstractName implements Name {
         return this.delimiter;
     }
 
-    abstract getComponents(): String[];
+    abstract getComponents(): string[];
 
     abstract getNoComponents(): number;
 
-    abstract getComponent(i: number): string;
+    public getComponent(i: number): string {
+        this.isValid()
+        this.checkIndex(i, this.getNoComponents())
+        const comps = this.getComponents()
+        return comps[i]
+    }
+
+    public checkIndex(i: number, max: number): void {
+        IllegalArgumentException.assert(i >= 0 && i < max)
+    }
+
+    public checkComp(c: string): void {
+        IllegalArgumentException.assert(c !== this.getDelimiterCharacter())
+    }
+
     abstract setComponent(i: number, c: string): void;
 
     abstract insert(i: number, c: string): void;
@@ -102,8 +117,26 @@ export abstract class AbstractName implements Name {
     abstract remove(i: number): void;
 
     public concat(other: Name): void {
-        for (let i = 0; i < other.getNoComponents(); i++) {
-            this.append(other.getComponent(i))
+        IllegalArgumentException.assert(other instanceof AbstractName)
+        if (other.getDelimiterCharacter() === this.getDelimiterCharacter()) {
+            for (let i = 0; i < other.getNoComponents(); i++) {
+                this.append(other.getComponent(i))
+            }    
+        } else {
+            for (let i = 0; i < other.getNoComponents(); i++) {
+                const comp = other.getComponent(i)
+                let newC = ''
+                for (let j = 0; j < comp.length; j++) {
+                    if (comp[j] === this.getDelimiterCharacter()) {
+                        newC = newC + ESCAPE_CHARACTER + comp[j];
+                    } else if (comp[j] === other.getDelimiterCharacter() && comp[j-1] === ESCAPE_CHARACTER) {
+                        newC = newC.slice(0, newC.length - 1) + comp[j]
+                    } else {
+                        newC = newC + comp[j]
+                    }
+                } 
+                this.append(newC)
+            }
         }
     }
 }

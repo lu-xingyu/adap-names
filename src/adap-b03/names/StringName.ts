@@ -92,12 +92,14 @@ export class StringName extends AbstractName {
         let Comps = this.getComponents()
         Comps.splice(i, 0, c)
         this.name = Comps.join(this.delimiter)
+        this.noComponents++
     }
 
     public append(c: string) {
         let Comps = this.getComponents()
         Comps.push(c)
         this.name = Comps.join(this.delimiter)
+        this.noComponents++
     }
 
     public remove(i: number) {
@@ -107,6 +109,7 @@ export class StringName extends AbstractName {
         let Comps = this.getComponents()
         Comps.splice(i, 1)
         this.name = Comps.join(this.delimiter)
+        this.noComponents--
     }
 
     public concat(other: Name): void {
