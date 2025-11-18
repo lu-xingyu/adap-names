@@ -12,7 +12,7 @@ export abstract class AbstractName implements Name {
     }
 
     protected isValid() {
-        InvalidStateException.assert(typeof(this.delimiter) === "string" && this.delimiter.length === 1)
+        InvalidStateException.assert(typeof(this.delimiter) === "string" && this.delimiter.length === 1 && this.delimiter !== ESCAPE_CHARACTER)
     }
 
     abstract clone(): Name;
@@ -70,7 +70,7 @@ export abstract class AbstractName implements Name {
     }
 
     public getHashCode(): number {
-        const thisString = this.getComponents().join(this.getDelimiterCharacter()) + this.getDelimiterCharacter()
+        const thisString = this.getComponents().join(this.getDelimiterCharacter()) + this.getDelimiterCharacter() + this.getNoComponents()
         let hash = 0
         for (let i = 0; i < thisString.length; i++) {
             hash = hash * 31 + thisString.charCodeAt(i) | 0
