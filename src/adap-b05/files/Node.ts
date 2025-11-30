@@ -3,7 +3,7 @@ import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
 import { Exception } from "../common/Exception";
 import { Name } from "../names/Name";
-import type { Directory } from "./Directory";
+import { Directory } from "./Directory";
 
 
 export class Node {
@@ -19,7 +19,6 @@ export class Node {
     }
     constructor(bn: string, pn: Directory) {
         IllegalArgumentException.assert(typeof(bn) === "string")
-        // IllegalArgumentException.assert(pn.isDirectory())
         this.doSetBaseName(bn);
         this.parentNode = pn; // why oh why do I have to set this
         this.initialize(pn);
@@ -32,7 +31,7 @@ export class Node {
     }
 
     public move(to: Directory): void {
-        // IllegalArgumentException.assert(to instanceof Directory)
+        IllegalArgumentException.assert(to.isDirectory())
         this.isValid()
         this.parentNode.removeChildNode(this);
         to.addChildNode(this);

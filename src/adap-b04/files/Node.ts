@@ -9,9 +9,15 @@ export class Node {
     protected baseName: string = "";
     protected parentNode: Directory;
 
+    protected isValid() {
+        InvalidStateException.assert(
+            ( this.parentNode as Node === this ) ||
+            this.baseName !== "")
+        InvalidStateException.assert(this.parentNode.isDirectory())
+    }
+
     constructor(bn: string, pn: Directory) {
         IllegalArgumentException.assert(typeof(bn) === "string")
-        IllegalArgumentException.assert(pn instanceof Directory)
         this.doSetBaseName(bn);
         this.parentNode = pn; // why oh why do I have to set this
         this.initialize(pn);
@@ -23,28 +29,33 @@ export class Node {
     }
 
     public move(to: Directory): void {
-        IllegalArgumentException.assert(to instanceof Directory)
+        IllegalArgumentException.assert(to.isDirectory())
+        this.isValid()
         this.parentNode.removeChildNode(this);
         to.addChildNode(this);
         this.parentNode = to;
     }
 
     public getFullName(): Name {
+        this.isValid()
         const result: Name = this.parentNode.getFullName();
         result.append(this.getBaseName());
         return result;
     }
 
     public getBaseName(): string {
+        this.isValid()
         return this.doGetBaseName();
     }
 
     protected doGetBaseName(): string {
+        this.isValid()
         return this.baseName;
     }
 
     public rename(bn: string): void {
         IllegalArgumentException.assert(bn !== '')
+        this.isValid()
         this.doSetBaseName(bn);
     }
 
@@ -54,7 +65,11 @@ export class Node {
     }
 
     public getParentNode(): Directory {
+        this.isValid()
         return this.parentNode;
     }
-
+    
+    protected isDirectory() {
+        return 'getChildNodes' in this && typeof (this as any).getChildNodes === 'function'
+    }
 }
