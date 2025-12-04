@@ -8,18 +8,21 @@ export class StringName extends AbstractName {
     protected readonly name: string = "";
     protected readonly noComponents: number = 0;
 
-    constructor(source: string, delimiter?: string) {
+    constructor(source?: string, delimiter?: string) {
         super(delimiter);
-        this.name = source
-        for (let i = 0; i < this.name.length; i++) {
-            if (this.name[i] === this.delimiter) {
-                if (i >= 1 && this.name[i-1] === ESCAPE_CHARACTER) {
-                    continue
+        if (source !== undefined) {
+            this.name = source
+            for (let i = 0; i < this.name.length; i++) {
+                if (this.name[i] === this.delimiter) {
+                    if (i >= 1 && this.name[i-1] === ESCAPE_CHARACTER) {
+                        continue
+                    }
+                    this.noComponents++
                 }
-                this.noComponents++
             }
+            this.noComponents++
         }
-        this.noComponents++
+
     }
 
     protected isValid():void {
@@ -124,7 +127,11 @@ export class StringName extends AbstractName {
         this.isValid()
         this.checkIndex(i, this.getNoComponents())
         let Comps = this.getComponents()
+        
         Comps.splice(i, 1)
+        if (Comps.length === 0) {
+            return new StringName(undefined, this.getDelimiterCharacter())
+        }
         const newName = Comps.join(this.getDelimiterCharacter())
         return new StringName(newName, this.getDelimiterCharacter())
     }
